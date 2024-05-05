@@ -334,6 +334,7 @@ static void SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bM
 
 void SaveCurrentSectorsInformationToTempItemFile()
 {
+	return;
 	if (gfWasInMeanwhile)
 	{ // Don't save a temp file for the meanwhile scene map.
 		gfWasInMeanwhile = FALSE;

@@ -53,6 +53,9 @@ CFLAGS += -Wwrite-strings
 
 CFLAGS += -DJA2
 
+CFLAGS += -sUSE_SDL=2
+CFLAGS += -flto
+CFLAGS += -O3
 
 ifdef WITH_DEMO
   CFLAGS += -DJA2DEMO

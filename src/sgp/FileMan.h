@@ -51,6 +51,7 @@ void   FileClose(HWFILE);
 
 void FileRead( HWFILE, void*       pDest, UINT32 uiBytesToRead);
 void FileWrite(HWFILE, void const* pDest, UINT32 uiBytesToWrite);
+SDL_RWops* FileGetRWOps(SGPFile* const f);
 
 void  FileSeek(HWFILE, INT32 distance, FileSeekMode);
 INT32 FileGetPos(HWFILE);

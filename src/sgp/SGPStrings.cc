@@ -1,6 +1,6 @@
 #include "SGPStrings.h"
 
-#if defined(__linux__) || defined(_WIN32)
+#if defined(__linux__) || defined(_WIN32) || defined(__EMSCRIPTEN__)
 
 #include <sys/types.h>
 /*	$OpenBSD: wcslcpy.c,v 1.4 2006/05/05 15:27:38 millert Exp $	*/

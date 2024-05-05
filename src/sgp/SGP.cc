@@ -122,7 +122,6 @@ static void InitializeStandardGamingPlatform(void)
 	atexit(SGPExit);
 
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_EnableUNICODE(SDL_ENABLE);
 
 #ifdef SGP_DEBUG
 	// Initialize the Debug Manager - success doesn't matter
@@ -219,14 +218,6 @@ static void MainLoop()
 		{
 			switch (event.type)
 			{
-				case SDL_ACTIVEEVENT:
-					if (event.active.state & SDL_APPACTIVE)
-					{
-						gfApplicationActive = (event.active.gain != 0);
-						break;
-					}
-					break;
-
 				case SDL_KEYDOWN: KeyDown(&event.key.keysym); break;
 				case SDL_KEYUP:   KeyUp(  &event.key.keysym); break;
 

@@ -129,8 +129,8 @@ void SaveGameSettings(void)
 	INJ_SKIP(d, 20)
 	Assert(d == endof(data));
 
-	AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	FileWrite(f, data, sizeof(data));
+	//AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	//FileWrite(f, data, sizeof(data));
 }
 
 

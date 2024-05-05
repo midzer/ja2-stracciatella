@@ -961,7 +961,7 @@ void PrepareLoadedSector()
 	}
 
 	// Reset ambients!
-	HandleNewSectorAmbience( gTilesets[ giCurrentTilesetID ].ubAmbientID );
+	//HandleNewSectorAmbience( gTilesets[ giCurrentTilesetID ].ubAmbientID );
 
 	//if we are loading a 'pristine' map ( ie, not loading a saved game )
 	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ))

@@ -200,6 +200,7 @@ static void SaveGameFilePosition(UINT8 slot, const HWFILE save, const char* pMsg
 
 BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 {
+	return TRUE;
 	BOOLEAN	fPausedStateBeforeSaving    = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
 
@@ -2081,20 +2082,20 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 static void SavePreRandomNumbersToSaveGameFile(HWFILE const hFile)
 {
 	//Save the Prerandom number index
-	FileWrite(hFile, &guiPreRandomIndex, sizeof(UINT32));
+	//FileWrite(hFile, &guiPreRandomIndex, sizeof(UINT32));
 
 	//Save the Prerandom number index
-	FileWrite(hFile, guiPreRandomNums, sizeof(UINT32) * MAX_PREGENERATED_NUMS);
+	//FileWrite(hFile, guiPreRandomNums, sizeof(UINT32) * MAX_PREGENERATED_NUMS);
 }
 
 
 static void LoadPreRandomNumbersFromSaveGameFile(HWFILE const hFile)
 {
 	//Load the Prerandom number index
-	FileRead(hFile, &guiPreRandomIndex, sizeof(UINT32));
+	//FileRead(hFile, &guiPreRandomIndex, sizeof(UINT32));
 
 	//Load the Prerandom number index
-	FileRead(hFile, guiPreRandomNums, sizeof(UINT32) * MAX_PREGENERATED_NUMS);
+	//FileRead(hFile, guiPreRandomNums, sizeof(UINT32) * MAX_PREGENERATED_NUMS);
 }
 
 

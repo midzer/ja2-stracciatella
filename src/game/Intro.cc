@@ -142,13 +142,13 @@ static void EnterIntroScreen(void)
 	// Don't play music....
 	SetMusicMode( MUSIC_NONE );
 
-#ifdef JA2BETAVERSION
+//#ifdef JA2BETAVERSION
 	if( FileExists( "../NoIntro.txt" ) )
 	{
 		PrepareToExitIntroScreen();
 		return;
 	}
-#endif
+//#endif
 
 	SmkInitialize();
 
@@ -264,7 +264,7 @@ static void PrepareToExitIntroScreen(void)
 	else if( gbIntroScreenMode == INTRO_SPLASH )
 	{
 		//display a logo when exiting
-		DisplaySirtechSplashScreen();
+		//DisplaySirtechSplashScreen();
 
 		gfDoneWithSplashScreen = TRUE;
 		guiIntroExitScreen = INIT_SCREEN;

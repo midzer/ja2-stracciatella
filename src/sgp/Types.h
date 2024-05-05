@@ -1,7 +1,7 @@
 #ifndef __TYPES_
 #define __TYPES_
 
-#include <SDL_video.h>
+#include <SDL.h>
 
 #include "SGPStrings.h"
 
@@ -96,6 +96,14 @@ struct SGPBox
 	INT16 y;
 	INT16 w;
 	INT16 h;
+
+    void set(INT16 _x, INT16 _y, INT16 _w, INT16 _h)
+    {
+        x = _x;
+        y = _y;
+        w = _w;
+        h = _h;
+    }
 };
 
 struct SGPRect

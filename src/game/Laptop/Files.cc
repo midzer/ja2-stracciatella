@@ -166,8 +166,8 @@ static void AddFilesToPlayersLog(UINT8 ubCode)
 	// outside of the Files system(the code in this .c file), this is the only function you'll ever need
 
 	// if not in Files mode, read in from file
-	if(!fInFilesMode)
-   OpenAndReadFilesFile( );
+	//if(!fInFilesMode)
+   //OpenAndReadFilesFile( );
 
 	// process the actual data
 	ProcessAndEnterAFilesRecord(ubCode, FALSE);
@@ -176,8 +176,8 @@ static void AddFilesToPlayersLog(UINT8 ubCode)
 	CheckForUnreadFiles( );
 
 	// write out to file if not in Files mode
-	if(!fInFilesMode)
-   OpenAndWriteFilesFile( );
+	//if(!fInFilesMode)
+   //OpenAndWriteFilesFile( );
 }
 
 
@@ -186,7 +186,7 @@ static void ClearFilesList(void);
 
 void GameInitFiles(void)
 {
-	FileDelete(FILES_DAT_FILE);
+	//FileDelete(FILES_DAT_FILE);
 	ClearFilesList( );
 
 	// add background check by RIS
@@ -219,7 +219,7 @@ void EnterFiles(void)
 	HandleFileViewerButtonStates( );
 
 	// build files list
-  OpenAndReadFilesFile( );
+  //OpenAndReadFilesFile( );
 
 	// render files system
   RenderFiles( );
@@ -242,7 +242,7 @@ void ExitFiles(void)
 {
 
 	// write files list out to disk
-  OpenAndWriteFilesFile( );
+  //OpenAndWriteFilesFile( );
 
 	// remove mouse regions
 	RemoveFilesMouseRegions( );

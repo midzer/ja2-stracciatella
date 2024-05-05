@@ -891,15 +891,15 @@ static void GetBalanceFromDisk(void)
 	// assuming file already openned
   // this procedure will open and read in data to the finance list
 	AutoSGPFile f;
-	try
+	/*try
 	{
 		f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
 	}
 	catch (...)
-	{
+	{*/
 		LaptopSaveInfo.iCurrentBalance = 0;
 		return; /* XXX TODO0019 ignore */
-	}
+	//}
 
 	// get balance from disk first
   FileRead(f, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));

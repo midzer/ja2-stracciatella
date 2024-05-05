@@ -156,7 +156,7 @@ void ShutdownJA2(void)
 	ShutdownStrategicLayer();
 
 	// remove temp files built by laptop
-	ClearOutTempLaptopFiles( );
+	//ClearOutTempLaptopFiles( );
 
 	// Shutdown queue system
 	ShutdownDialogueControl();

@@ -1,12 +1,14 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
-#include <SDL_video.h>
+#include <SDL.h>
 #include "Types.h"
 
 
 #define VIDEO_NO_CURSOR 0xFFFF
+#define GAME_WINDOW g_game_window
 
+extern SDL_Window* g_game_window;
 
 void         VideoSetFullScreen(BOOLEAN enable);
 void         InitializeVideoManager(void);
@@ -33,5 +35,11 @@ void VideoCaptureToggle(void);
 void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 
 void RefreshScreen(void);
+
+// Creates a list to contain video Surfaces
+void InitializeVideoSurfaceManager(void);
+
+// Deletes any video Surface placed into list
+void ShutdownVideoSurfaceManager(void);
 
 #endif

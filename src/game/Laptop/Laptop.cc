@@ -3441,10 +3441,10 @@ static void HandleWebBookMarkNotifyTimer(void)
 void ClearOutTempLaptopFiles(void)
 {
 	// clear out all temp files from laptop
-	FileDelete("files.dat");
-	FileDelete("finances.dat");
-	FileDelete("email.dat");
-	FileDelete("history.dat");
+	//FileDelete("files.dat");
+	//FileDelete("finances.dat");
+	//FileDelete("email.dat");
+	//FileDelete("history.dat");
 }
 
 

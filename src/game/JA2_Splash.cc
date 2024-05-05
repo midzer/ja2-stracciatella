@@ -23,7 +23,7 @@ void InitJA2SplashScreen(void)
 	InitializeJA2Clock();
 
 	STRING512 DataDir;
-	sprintf(DataDir, "%s/Data", GetExecutableDirectory());
+	sprintf(DataDir, "./Data", GetExecutableDirectory());
 	SetFileManCurrentDirectory(DataDir);
 
 	InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries));

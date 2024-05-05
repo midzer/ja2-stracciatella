@@ -3567,7 +3567,7 @@ UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
 
 	if ( pSoldier->bTeam == ENEMY_TEAM )
 	{
-		return( (UINT8) (MAX_MOVEMENT_NOISE - PreRandom( 2 )) );
+		return( (UINT8) (MAX_MOVEMENT_NOISE - Random( 2 )) );
 	}
 
 	iStealthSkill = 20 + 4 * EffectiveExpLevel( pSoldier ) + ((EffectiveDexterity( pSoldier ) * 4) / 10); // 24-100
@@ -3657,16 +3657,16 @@ UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
 		}
 		else
 		{
-			ubVolume = 1 + (UINT8) PreRandom(ubMaxVolume);	// actual volume is 1 to max volume
+			ubVolume = 1 + (UINT8) Random(ubMaxVolume);	// actual volume is 1 to max volume
 		}
 	}
 	else			// in STEALTH mode
 	{
-		iRoll = (INT32) PreRandom(100);	// roll them bones!
+		iRoll = (INT32) Random(100);	// roll them bones!
 
 		if (iRoll >= iStealthSkill)   // v1.13 modification: give a second chance!
 		{
-			iRoll = (INT32) PreRandom(100);
+			iRoll = (INT32) Random(100);
 		}
 
 		if (iRoll < iStealthSkill)

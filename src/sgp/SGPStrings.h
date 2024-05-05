@@ -7,7 +7,7 @@
 #include <strings.h>
 
 
-#if defined(__linux__) || defined(_WIN32)
+#if defined(__linux__) || defined(_WIN32) || defined(__EMSCRIPTEN__)
 
 size_t wcslcpy(wchar_t* dst, const wchar_t* src, size_t size);
 size_t strlcpy(char* dst, const char* src, size_t size);
