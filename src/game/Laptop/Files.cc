@@ -186,7 +186,7 @@ static void ClearFilesList(void);
 
 void GameInitFiles(void)
 {
-	FileDelete(FILES_DAT_FILE);
+	//FileDelete(FILES_DAT_FILE);
 	ClearFilesList( );
 
 	// add background check by RIS
@@ -350,6 +350,7 @@ static void ProcessAndEnterAFilesRecord(const UINT8 ubCode, const BOOLEAN fRead)
 
 static void OpenAndReadFilesFile(void)
 {
+	return;
 	ClearFilesList();
 
 	AutoSGPFile f;

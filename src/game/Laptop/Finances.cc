@@ -887,6 +887,7 @@ static void WriteBalanceToDisk(void)
 
 static void GetBalanceFromDisk(void)
 {
+	return;
 	// will grab the current blanace from disk
 	// assuming file already openned
   // this procedure will open and read in data to the finance list

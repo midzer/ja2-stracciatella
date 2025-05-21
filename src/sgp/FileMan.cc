@@ -193,6 +193,12 @@ void InitializeFileManager(void)
 
 #endif
 
+#ifdef __EMSCRIPTEN__
+
+#define LOCALDIR ""
+    home = ".";
+#endif
+
 	snprintf(LocalPath, lengthof(LocalPath), "%s/" LOCALDIR, home);
 	if (mkdir(LocalPath, 0700) != 0 && errno != EEXIST)
 	{
@@ -306,6 +312,8 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 			if (d < 0)
 			{
 				if (OpenFileFromLibrary(filename, &file->u.lib)) return file.Release();
+
+				return NULL;
 
 				if (flags & FILE_OPEN_ALWAYS)
 				{
