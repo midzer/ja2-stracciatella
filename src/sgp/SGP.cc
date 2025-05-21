@@ -48,6 +48,7 @@ static BOOLEAN gfApplicationActive;
 BOOLEAN gfProgramIsRunning;
 static BOOLEAN gfGameInitialized = FALSE;
 
+#define FRAME_TIME 17 // 16.6ms (1000ms / 60 FPS)
 
 #if 0 // XXX TODO
 INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam)
@@ -246,8 +247,12 @@ static void MainLoop()
 		{
 			if (gfApplicationActive)
 			{
+				Uint32 gameCycleTicks = SDL_GetTicks();
 				GameLoop();
-				SDL_Delay(1); // XXX HACK0001
+				gameCycleTicks = SDL_GetTicks() - gameCycleTicks;
+				if (gameCycleTicks < FRAME_TIME) {
+					SDL_Delay(FRAME_TIME - gameCycleTicks);
+				}
 			}
 			else
 			{
