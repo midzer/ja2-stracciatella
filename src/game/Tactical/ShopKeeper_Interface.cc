@@ -2091,8 +2091,8 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	ETRLEObject const& pTrav     = ItemVOIdx.SubregionProperties(item.ubGraphicNum);
 	UINT32      const  usHeight  = pTrav.usHeight;
 	UINT32      const  usWidth   = pTrav.usWidth;
-	INT16              sCenX     = usPosX + 7 + abs(SKI_INV_WIDTH - 3 - usWidth)  / 2 - pTrav.sOffsetX;
-	INT16              sCenY     = usPosY +     abs(SKI_INV_HEIGHT    - usHeight) / 2 - pTrav.sOffsetY;
+	INT16              sCenX     = usPosX + 7 + abs(int(SKI_INV_WIDTH - 3 - usWidth))  / 2 - pTrav.sOffsetX;
+	INT16              sCenY     = usPosY +     abs(int(SKI_INV_HEIGHT    - usHeight)) / 2 - pTrav.sOffsetY;
 
 
 	//Restore the background region
