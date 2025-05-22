@@ -1,3 +1,4 @@
+* Update SoundMan to fix short system hang on audio load
 * Poll all SDL events before proceeding
 * Limit game rendering to 60 FPS by freeing CPU resources with a dynamic SDL_Delay()
 * Migrate to SDL2
