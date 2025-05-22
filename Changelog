@@ -1,3 +1,4 @@
+* Limit game rendering to 60 FPS by freeing CPU resources with a dynamic SDL_Delay()
 * Migrate to SDL2
 * Fix a bug in v0.8, which lead to a missing error message when trying to attach an item.
 * Fix a glitch in v0.11: The yes/no buttons in the email delete window could not be clicked, when the email had more than one page.
