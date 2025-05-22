@@ -1161,7 +1161,7 @@ static void ShadeMapElemZoomIn(const INT16 sMapX, const INT16 sMapY, INT32 iColo
 void InitializePalettesForMap(void)
 {
 #ifndef JA2DEMO
-	AutoSGPVSurface uiTempMap(AddVideoSurfaceFromFile("INTERFACE/b_map.pcx"));
+	SGP::AutoPtr<SGPVSurfaceAuto> uiTempMap(AddVideoSurfaceFromFile("INTERFACE/b_map.pcx"));
 
 	SGPPaletteEntry const* const pal = uiTempMap->GetPalette();
 
