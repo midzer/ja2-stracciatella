@@ -1,3 +1,4 @@
+* Poll all SDL events before proceeding
 * Limit game rendering to 60 FPS by freeing CPU resources with a dynamic SDL_Delay()
 * Migrate to SDL2
 * Fix a bug in v0.8, which lead to a missing error message when trying to attach an item.

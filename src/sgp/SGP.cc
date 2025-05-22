@@ -215,7 +215,7 @@ static void MainLoop()
   while (gfProgramIsRunning)
   {
 		SDL_Event event;
-		if (SDL_PollEvent(&event))
+		while (SDL_PollEvent(&event))
 		{
 			switch (event.type)
 			{
@@ -239,27 +239,28 @@ static void MainLoop()
 					break;
 
 				case SDL_QUIT:
-					gfProgramIsRunning = FALSE;
+				    // Yes, goto: http://stackoverflow.com/a/1257776/276451
+					goto exit;
 					break;
+			}
+		}
+		if (gfApplicationActive)
+		{
+			Uint32 gameCycleTicks = SDL_GetTicks();
+			GameLoop();
+			gameCycleTicks = SDL_GetTicks() - gameCycleTicks;
+			if (gameCycleTicks < FRAME_TIME) {
+				SDL_Delay(FRAME_TIME - gameCycleTicks);
 			}
 		}
 		else
 		{
-			if (gfApplicationActive)
-			{
-				Uint32 gameCycleTicks = SDL_GetTicks();
-				GameLoop();
-				gameCycleTicks = SDL_GetTicks() - gameCycleTicks;
-				if (gameCycleTicks < FRAME_TIME) {
-					SDL_Delay(FRAME_TIME - gameCycleTicks);
-				}
-			}
-			else
-			{
-				SDL_WaitEvent(NULL);
-			}
+			SDL_WaitEvent(NULL);
 		}
   }
+// Exit point for goto within switch
+exit:
+    ;
 }
 
 
