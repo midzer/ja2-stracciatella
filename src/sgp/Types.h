@@ -35,6 +35,11 @@
 #define endof(a) ((a) + lengthof(a))
 
 
+#define FOR_EACHX(type, iter, array, x) \
+  for (type *iter = (array); iter != endof((array)); (x), ++iter)
+#define FOR_EACH(type, iter, array) FOR_EACHX(type, iter, (array), (void)0)
+
+
 #define __max(a, b) ((a) > (b) ? (a) : (b))
 #define __min(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) __max(a, b)
@@ -97,7 +102,7 @@ struct SGPBox
 	INT16 w;
 	INT16 h;
 
-    void set(INT16 _x, INT16 _y, INT16 _w, INT16 _h)
+	void set(INT16 _x, INT16 _y, INT16 _w, INT16 _h)
     {
         x = _x;
         y = _y;
