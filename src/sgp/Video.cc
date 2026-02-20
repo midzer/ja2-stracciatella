@@ -128,9 +128,9 @@ void InitializeVideoManager(void)
 {
 	//SLOGD(DEBUG_TAG_VIDEO, "Initializing the video manager");
 	//SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+	//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-	g_window_flags |= SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
+	g_window_flags |= SDL_WINDOW_ALLOW_HIGHDPI;
 
 	g_game_window = SDL_CreateWindow(APPLICATION_NAME,
 					SDL_WINDOWPOS_UNDEFINED,
