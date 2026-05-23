@@ -286,7 +286,7 @@ static void KeyChange(SDL_Keysym const* const key_sym, bool const pressed)
 	}
 	gfKeyState[RemapKeycode(key)] = pressed;
 
-	QueueKeyEvent(event_type, key, mod, '\0');
+	QueueKeyEvent(event_type, key, mod, {});
 }
 
 
@@ -339,7 +339,7 @@ void KeyUp(const SDL_Keysym* KeySym)
 			gfKeyState.reset(ALT);
 			break;
 
-		/*case SDLK_PRINTSCREEN:
+		case SDLK_PRINTSCREEN:
 			PrintScreen();
 			break;
 
@@ -350,7 +350,7 @@ void KeyUp(const SDL_Keysym* KeySym)
 				SDL_GetWindowGrab(GAME_WINDOW) == SDL_FALSE ?
 					SDL_TRUE : SDL_FALSE
 			);
-			break;*/
+			break;
 
 		case SDLK_RETURN:
 			if (_KeyDown(ALT))
@@ -366,22 +366,23 @@ void KeyUp(const SDL_Keysym* KeySym)
 	}
 }
 
-/*void TextInput(const SDL_TextInputEvent* TextEv) {
-	try {
-		UTF8String utf8String = UTF8String(TextEv->text);
-		QueueKeyEvent(TEXT_INPUT, SDLK_UNKNOWN, KMOD_NONE, utf8String.getUTF16()[0]);
+void TextInput(const SDL_TextInputEvent* TextEv) {
+	char c = TextEv->text[0];
+	if (c >= 32 && c <= 126)
+	{
+		QueueKeyEvent(KEY_DOWN, SDLK_UNKNOWN, KMOD_NONE, (wchar_t)c);
 	}
-	catch (const InvalidEncodingException&)
+	else
 	{
 		// ignore invalid inputs
 		static bool warn = true;
 		if (warn)
 		{
-			SLOGW(DEBUG_TAG_SGP, "Received invalid utf-8 character.");
+			//SLOGW("Received invalid utf-8 character.");
 			warn = false;
 		}
 	}
-}*/
+}
 
 
 void GetMousePos(SGPPoint* Point)

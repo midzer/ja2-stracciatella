@@ -229,6 +229,7 @@ static void MainLoop()
 
 				case SDL_KEYDOWN: KeyDown(&event.key.keysym); break;
 				case SDL_KEYUP:   KeyUp(  &event.key.keysym); break;
+				case SDL_TEXTINPUT: TextInput(&event.text); break;
 
 				case SDL_MOUSEBUTTONDOWN: MouseButtonDown(&event.button); break;
 				case SDL_MOUSEBUTTONUP:   MouseButtonUp(&event.button);   break;
