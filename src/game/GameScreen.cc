@@ -637,6 +637,10 @@ ScreenID MainGameScreenHandle(void)
 
 	if ( gfScrollPending  )
 	{
+		// Fix last FRAME_BUFFER being shown when scroll begins
+		SDL_Surface* WindowSurface = SDL_GetWindowSurface(GAME_WINDOW);
+		SDL_BlitSurface(FRAME_BUFFER->GetSurface(), NULL, WindowSurface, NULL);
+
 		AllocateVideoOverlaysArea( );
 		SaveVideoOverlaysArea( FRAME_BUFFER );
 		ExecuteVideoOverlays( );
