@@ -22,7 +22,7 @@ INSTALL_MAN     ?= $(INSTALL) -m 444
 INSTALL_DATA    ?= $(INSTALL) -m 444
 
 
-SDL_CONFIG  ?= sdl-config
+SDL_CONFIG  ?= sdl2-config
 ifndef CFLAGS_SDL
 CFLAGS_SDL  := $(shell $(SDL_CONFIG) --cflags)
 endif
