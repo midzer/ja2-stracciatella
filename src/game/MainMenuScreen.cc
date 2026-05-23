@@ -123,15 +123,15 @@ ScreenID MainMenuScreenHandle(void)
 		ClearMainMenu();
 		RenderMainMenu();
 
+		RestoreButtonBackGrounds();
+
+		// Render buttons
+		for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
+		{
+			MarkAButtonDirty(iMenuButtons[cnt]);
+		}
+
 		fInitialRender = FALSE;
-	}
-
-	RestoreButtonBackGrounds();
-
-	// Render buttons
-	for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
-	{
-		MarkAButtonDirty(iMenuButtons[cnt]);
 	}
 
 	RenderButtons();
