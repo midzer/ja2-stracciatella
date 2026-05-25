@@ -113,7 +113,6 @@ void _FailMessage(const char *pString, UINT32 uiLineNum, const char *pSourceFile
 	}
 #endif
 
-	SDL_Quit();
 	abort();
 }
 

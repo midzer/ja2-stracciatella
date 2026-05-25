@@ -338,6 +338,7 @@ static void SGPExit(void)
 	gfProgramIsRunning = FALSE;
 
 	ShutdownStandardGamingPlatform();
+	SDL_Quit();
 }
 
 
