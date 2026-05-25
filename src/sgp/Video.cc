@@ -216,8 +216,28 @@ void ShutdownVideoManager(void)
 
 	guiVideoManagerState = VIDEO_OFF;
 
+	// ScreenBuffer SDL surface freed by its SGPVSurface wrapper.
+	ScreenBuffer = NULL;
+
+	if (ScreenTexture != NULL) {
+		SDL_DestroyTexture(ScreenTexture);
+		ScreenTexture = NULL;
+	}
+
+	if (GameRenderer != NULL) {
+		SDL_DestroyRenderer(GameRenderer);
+		GameRenderer = NULL;
+	}
+
+	if (g_game_window != NULL) {
+		SDL_DestroyWindow(g_game_window);
+		g_game_window = NULL;
+	}
+
 	// ATE: Release mouse cursor!
 	FreeMouseCursor();
+
+	SDL_ShowCursor(SDL_TRUE);
 }
 
 
