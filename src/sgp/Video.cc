@@ -56,15 +56,6 @@ static UINT32  guiLastFrame;
 static UINT16* gpFrameData[MAX_NUM_FRAMES];
 static INT32   giNumFrames = 0;
 
-
-// Globals for mouse cursor
-static UINT16 gusMouseCursorWidth;
-static UINT16 gusMouseCursorHeight;
-static INT16  gsMouseCursorXOffset;
-static INT16  gsMouseCursorYOffset;
-
-static SDL_Rect MouseBackground = { 0, 0, 0, 0 };
-
 // Refresh thread based variables
 static UINT32 guiFrameBufferState;  // BUFFER_READY, BUFFER_DIRTY
 static UINT32 guiVideoManagerState; // VIDEO_ON, VIDEO_OFF, VIDEO_SUSPENDED
@@ -139,7 +130,7 @@ void InitializeVideoManager(void)
 					g_window_flags);
 
 	GameRenderer = SDL_CreateRenderer(g_game_window, -1, 0);
-	SDL_RenderSetLogicalSize(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+	//SDL_RenderSetLogicalSize(GameRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	/*SDL_Surface* windowIcon = SDL_CreateRGBSurfaceFrom(
 			(void*)gWindowIconData.pixel_data,
@@ -179,7 +170,7 @@ void InitializeVideoManager(void)
 	}
 
 	FrameBuffer = SDL_CreateRGBSurface(
-		SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH,
+		0, SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH,
 		RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK
 	);
 
@@ -202,10 +193,11 @@ void InitializeVideoManager(void)
 	SDL_ShowCursor(SDL_DISABLE);
 
 	// Initialize state variables
-	guiFrameBufferState      = BUFFER_DIRTY;
+	guiFrameBufferState      = BUFFER_READY;
 	guiVideoManagerState     = VIDEO_ON;
 	guiDirtyRegionCount      = 0;
-	gfForceFullScreenRefresh = TRUE;
+	guiDirtyRegionExCount    = 0;
+	gfForceFullScreenRefresh = FALSE;
 	gfPrintFrameBuffer       = FALSE;
 	guiPrintFrameBufferIndex = 0;
 
@@ -266,8 +258,6 @@ void InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 	{
 		// The MAX_DIRTY_REGIONS limit has been exceeded. Therefore we arbitrarely invalidate the entire
 		// screen and force a full screen refresh
-		guiDirtyRegionExCount = 0;
-		guiDirtyRegionCount = 0;
 		gfForceFullScreenRefresh = TRUE;
 	}
 }
@@ -316,8 +306,6 @@ static void AddRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom)
 	}
 	else
 	{
-		guiDirtyRegionExCount = 0;
-		guiDirtyRegionCount = 0;
 		gfForceFullScreenRefresh = TRUE;
 	}
 }
@@ -331,8 +319,6 @@ void InvalidateScreen(void)
 	// FRAME_BUFFER_MUTEX mutual exclusion section. Anything else will cause the application to
 	// yack
 
-	guiDirtyRegionCount = 0;
-	guiDirtyRegionExCount = 0;
 	gfForceFullScreenRefresh = TRUE;
 	guiFrameBufferState = BUFFER_DIRTY;
 }
@@ -353,7 +339,7 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	const UINT16 usWidth  = SCREEN_WIDTH;
 	const UINT16 usHeight = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
 
-	SDL_BlitSurface(ScreenBuffer, NULL, Source, NULL);
+	SDL_BlitSurface(FrameBuffer, NULL, Source, NULL);
 
 	if (sScrollXIncrement < 0)
 	{
@@ -443,17 +429,14 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 	// BLIT NEW
 	ExecuteVideoOverlaysToAlternateBuffer(BACKBUFFER);
 
-	SDL_Texture* screenTexture = SDL_CreateTextureFromSurface(GameRenderer, ScreenBuffer);
-
 	SDL_Rect r;
 	r.x = gsVIEWPORT_START_X;
 	r.y = gsVIEWPORT_WINDOW_START_Y;
 	r.w = gsVIEWPORT_END_X - gsVIEWPORT_START_X;
 	r.h = gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y;
-	SDL_RenderCopy(GameRenderer, screenTexture, &r, &r);
+	SDL_BlitSurface(Dest, &r, FrameBuffer, &r);
 
 	SDL_FreeSurface(Source);
-	SDL_DestroyTexture(screenTexture);
 }
 
 
@@ -575,8 +558,6 @@ void RefreshScreen(void)
 	}
 #endif
 
-	SDL_BlitSurface(FrameBuffer, &MouseBackground, ScreenBuffer, &MouseBackground);
-
 	const BOOLEAN scrolling = (gsScrollXIncrement != 0 || gsScrollYIncrement != 0);
 
 	if (guiFrameBufferState == BUFFER_DIRTY)
@@ -587,29 +568,27 @@ void RefreshScreen(void)
 		}
 		else
 		{
+			if (!gfForceFullScreenRefresh)
+			{
+				for (UINT32 i = 0; i < guiDirtyRegionExCount; i++)
+				{
+					SDL_Rect* r = &DirtyRegionsEx[i];
+					// Check if we are completely out of bounds
+					if (!scrolling || r->y > gsVIEWPORT_WINDOW_END_Y || r->y + r->h > gsVIEWPORT_WINDOW_END_Y)
+					{
+						InvalidateRegion(r->x, r->y, r->x + r->w, r->y + r->h);
+					}
+				}
+			}
 			if (gfForceFullScreenRefresh)
 			{
-				SDL_BlitSurface(FrameBuffer, NULL, ScreenBuffer, NULL);
+				SDL_BlitSurface(FrameBuffer, NULL, ScreenBuffer, NULL);				
 			}
 			else
 			{
 				for (UINT32 i = 0; i < guiDirtyRegionCount; i++)
 				{
 					SDL_BlitSurface(FrameBuffer, &DirtyRegions[i], ScreenBuffer, &DirtyRegions[i]);
-				}
-
-				for (UINT32 i = 0; i < guiDirtyRegionExCount; i++)
-				{
-					SDL_Rect* r = &DirtyRegionsEx[i];
-					if (scrolling)
-					{
-						// Check if we are completely out of bounds
-						if (r->y <= gsVIEWPORT_WINDOW_END_Y && r->y + r->h <= gsVIEWPORT_WINDOW_END_Y)
-						{
-							continue;
-						}
-					}
-					SDL_BlitSurface(FrameBuffer, r, ScreenBuffer, r);
 				}
 			}
 		}
@@ -639,25 +618,15 @@ void RefreshScreen(void)
 		gfPrintFrameBuffer = FALSE;
 	}
 
-	SGPPoint MousePos;
-	GetMousePos(&MousePos);
-	SDL_Rect src;
-	src.x = 0;
-	src.y = 0;
-	src.w = gusMouseCursorWidth;
-	src.h = gusMouseCursorHeight;
-	SDL_Rect dst;
-	dst.x = MousePos.iX - gsMouseCursorXOffset;
-	dst.y = MousePos.iY - gsMouseCursorYOffset;
-	SDL_BlitSurface(MouseCursor, &src, ScreenBuffer, &dst);
-	MouseBackground = dst;
+	if (gfForceFullScreenRefresh || guiDirtyRegionCount > 0)
+	{
+		SDL_UpdateTexture(ScreenTexture, NULL, ScreenBuffer->pixels, ScreenBuffer->pitch);
 
-	SDL_UpdateTexture(ScreenTexture, NULL, ScreenBuffer->pixels, ScreenBuffer->pitch);
+		SDL_RenderClear(GameRenderer);
+		SDL_RenderCopy(GameRenderer, ScreenTexture, NULL, NULL);
+		SDL_RenderPresent(GameRenderer);
 
-	SDL_RenderClear(GameRenderer);
-	SDL_RenderCopy(GameRenderer, ScreenTexture, NULL, NULL);
-	SDL_RenderPresent(GameRenderer);
-
+	}
 	gfForceFullScreenRefresh = FALSE;
 	guiDirtyRegionCount = 0;
 	guiDirtyRegionExCount = 0;
@@ -690,15 +659,6 @@ void GetPrimaryRGBDistributionMasks(UINT32* const  RedBitMask, UINT32* const Gre
 	*RedBitMask   = gusRedMask;
 	*GreenBitMask = gusGreenMask;
 	*BlueBitMask  = gusBlueMask;
-}
-
-
-void SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth)
-{
-	gsMouseCursorXOffset = sOffsetX;
-	gsMouseCursorYOffset = sOffsetY;
-	gusMouseCursorWidth  = usCursorWidth;
-	gusMouseCursorHeight = usCursorHeight;
 }
 
 

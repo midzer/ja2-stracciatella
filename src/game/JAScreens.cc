@@ -591,7 +591,7 @@ void DoDemoIntroduction(void)
 	while (gfProgramIsRunning)
 	{
 		SDL_Event event;
-		if (SDL_PollEvent(&event))
+		while (SDL_PollEvent(&event))
 		{
 			switch (event.type)
 			{
@@ -611,54 +611,52 @@ void DoDemoIntroduction(void)
 					break;
 			}
 		}
-		else
-		{ // Windows hasn't processed any messages, therefore we handle the rest
-			InputAtom InputEvent;
+		// Windows hasn't processed any messages, therefore we handle the rest
+		InputAtom InputEvent;
 
-			// Hook into mouse stuff for MOVEMENT MESSAGES
-			SGPPoint MousePos;
-			GetMousePos(&MousePos);
-			MouseSystemHook(MOUSE_POS, MousePos.iX, MousePos.iY);
-			MusicPoll();
-			if( uiStartTime != 0xffffffff )
+		// Hook into mouse stuff for MOVEMENT MESSAGES
+		SGPPoint MousePos;
+		GetMousePos(&MousePos);
+		MouseSystemHook(MOUSE_POS, MousePos.iX, MousePos.iY);
+		MusicPoll();
+		if( uiStartTime != 0xffffffff )
+		{
+			if( GetJA2Clock() > uiStartTime )
 			{
-				if( GetJA2Clock() > uiStartTime )
+				if( usFadeLimit )
 				{
-					if( usFadeLimit )
-					{
-						usFadeLimit--;
-						FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-						InvalidateScreen();
-					}
-					else
-					{
-						FRAME_BUFFER->Fill(0);
-						InvalidateScreen();
-						RefreshScreen();
-						return;
-					}
+					usFadeLimit--;
+					FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+					InvalidateScreen();
+				}
+				else
+				{
+					FRAME_BUFFER->Fill(0);
+					InvalidateScreen();
+					RefreshScreen();
+					return;
 				}
 			}
-			if( gfLeftButtonState || gfRightButtonState )
+		}
+		if( gfLeftButtonState || gfRightButtonState )
+		{
+			if( uiStartTime == 0xffffffff )
 			{
-				if( uiStartTime == 0xffffffff )
+				uiStartTime = GetJA2Clock();
+			}
+		}
+		while( DequeueEvent( &InputEvent ) )
+		{
+			if( InputEvent.usEvent == KEY_DOWN )
+			{
+				if (InputEvent.usParam == SDLK_ESCAPE) return;
+				if (uiStartTime == 0xffffffff)
 				{
 					uiStartTime = GetJA2Clock();
 				}
 			}
-			while( DequeueEvent( &InputEvent ) )
-			{
-				if( InputEvent.usEvent == KEY_DOWN )
-				{
-					if (InputEvent.usParam == SDLK_ESCAPE) return;
-					if (uiStartTime == 0xffffffff)
-					{
-						uiStartTime = GetJA2Clock();
-					}
-				}
-			}
-			RefreshScreen();
 		}
+		SDL_Delay(1);
 	}
 }
 

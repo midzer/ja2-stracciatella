@@ -42,6 +42,8 @@ class SGPVSurface
 		// Get the RGB palette entry values
 		SGPPaletteEntry const* GetPalette() const { return palette_; }
 
+		SDL_Surface* GetSurface() { return surface_; }
+
 		void SetTransparency(COLORVAL);
 
 		/* Fill an entire surface with a colour */
