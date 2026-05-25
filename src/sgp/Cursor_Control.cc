@@ -189,14 +189,23 @@ void CursorDatabaseClear(void)
 
 void SetMouseCursor(int offsetX, int offsetY)
 {
-	SDL_Cursor *cursor = SDL_CreateColorCursor(MOUSE_BUFFER->GetSurface(), offsetX, offsetY);
+	SDL_Cursor* cursor = SDL_CreateColorCursor(MOUSE_BUFFER->GetSurface(), offsetX, offsetY);
 	SDL_SetCursor(cursor);
-	SDL_ShowCursor(SDL_ENABLE);
 	if (MouseCursor)
 	{
 		SDL_FreeCursor(MouseCursor);
 	}
 	MouseCursor = cursor;
+	SDL_ShowCursor(SDL_ENABLE);
+}
+
+void RemoveMouseCursor(void)
+{
+	SDL_ShowCursor(SDL_DISABLE);
+	if (MouseCursor)
+	{
+		SDL_FreeCursor(MouseCursor);
+	}
 }
 
 BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
@@ -204,8 +213,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 #ifdef JA2
 	if (uiCursorIndex == VIDEO_NO_CURSOR)
 	{
-		SDL_ShowCursor(SDL_DISABLE);
-		SDL_FreeCursor(MouseCursor);
+		RemoveMouseCursor();
 	}
 	else if (gfCursorDatabaseInit)
 	{
@@ -247,8 +255,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 			{
 				if (GetClock() - guiDelayTimer < 1000)
 				{
-					SDL_ShowCursor(SDL_DISABLE);
-					SDL_FreeCursor(MouseCursor);
+					RemoveMouseCursor();
 					return TRUE;
 				}
 			}
