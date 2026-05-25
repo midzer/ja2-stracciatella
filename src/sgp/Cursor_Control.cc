@@ -25,6 +25,7 @@ static SGPVObject const* guiExternVo;
 static UINT16            gusExternVoSubIndex;
 static UINT32 guiOldSetCursor = 0;
 static UINT32 guiDelayTimer = 0;
+static SDL_Cursor* MouseCursor = NULL;
 
 static MOUSEBLT_HOOK gMouseBltOverride = NULL;
 
@@ -186,13 +187,25 @@ void CursorDatabaseClear(void)
   }
 }
 
+void SetMouseCursor(int offsetX, int offsetY)
+{
+	SDL_Cursor *cursor = SDL_CreateColorCursor(MOUSE_BUFFER->GetSurface(), offsetX, offsetY);
+	SDL_SetCursor(cursor);
+	SDL_ShowCursor(SDL_ENABLE);
+	if (MouseCursor)
+	{
+		SDL_FreeCursor(MouseCursor);
+	}
+	MouseCursor = cursor;
+}
 
 BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 {
 #ifdef JA2
 	if (uiCursorIndex == VIDEO_NO_CURSOR)
 	{
-		SetMouseCursorProperties(0, 0, 0, 0);
+		SDL_ShowCursor(SDL_DISABLE);
+		SDL_FreeCursor(MouseCursor);
 	}
 	else if (gfCursorDatabaseInit)
 	{
@@ -211,7 +224,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 			// Hook into hook function
 			if (gMouseBltOverride != NULL) gMouseBltOverride();
 
-			SetMouseCursorProperties(usEffWidth / 2, usEffHeight / 2, usEffHeight, usEffWidth);
+			SetMouseCursor(usEffWidth / 2, usEffHeight / 2);
 		}
 		else
 		{
@@ -234,7 +247,8 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 			{
 				if (GetClock() - guiDelayTimer < 1000)
 				{
-					SetMouseCursorProperties(0, 0, 0, 0);
+					SDL_ShowCursor(SDL_DISABLE);
+					SDL_FreeCursor(MouseCursor);
 					return TRUE;
 				}
 			}
@@ -313,7 +327,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 
 			INT16 sCenterValX = pCurData->sOffsetX;
 			INT16 sCenterValY = pCurData->sOffsetY;
-			SetMouseCursorProperties(sCenterValX, sCenterValY + gsGlobalCursorYOffset, pCurData->usHeight, pCurData->usWidth);
+			SetMouseCursor(sCenterValX, sCenterValY + gsGlobalCursorYOffset);
 		}
 	}
 

@@ -56,15 +56,6 @@ static UINT32  guiLastFrame;
 static UINT16* gpFrameData[MAX_NUM_FRAMES];
 static INT32   giNumFrames = 0;
 
-
-// Globals for mouse cursor
-static UINT16 gusMouseCursorWidth;
-static UINT16 gusMouseCursorHeight;
-static INT16  gsMouseCursorXOffset;
-static INT16  gsMouseCursorYOffset;
-
-static SDL_Rect MouseBackground = { 0, 0, 0, 0 };
-
 // Refresh thread based variables
 static UINT32 guiFrameBufferState;  // BUFFER_READY, BUFFER_DIRTY
 static UINT32 guiVideoManagerState; // VIDEO_ON, VIDEO_OFF, VIDEO_SUSPENDED
@@ -554,6 +545,8 @@ void RefreshScreen(void)
 		if(currentSecond != prevSecond)
 		{
 			printf("fps: %d\n", fps);
+			printf("dirty: %d\n", guiDirtyRegionCount);
+			printf("dirtyEx: %d\n", guiDirtyRegionExCount);
 			fps = 0;
 			prevSecond = currentSecond;
 		}
@@ -564,9 +557,6 @@ void RefreshScreen(void)
 	}
 #endif
 
-	SDL_Surface* WindowSurface = SDL_GetWindowSurface(g_game_window);
-	SDL_BlitSurface(FrameBuffer, &MouseBackground, WindowSurface, &MouseBackground);
-
 	if (guiFrameBufferState == BUFFER_DIRTY)
 	{
 		const BOOLEAN scrolling = (gsScrollXIncrement != 0 || gsScrollYIncrement != 0);
@@ -576,7 +566,7 @@ void RefreshScreen(void)
 			gFadeFunction();
 		}
 		else if (!gfForceFullScreenRefresh)
-		{	
+		{
 			for (UINT32 i = 0; i < guiDirtyRegionExCount; i++)
 			{
 				SDL_Rect* r = &DirtyRegionsEx[i];
@@ -587,27 +577,11 @@ void RefreshScreen(void)
 				}
 			}
 
-			SGPPoint MousePos;
-			GetMousePos(&MousePos);
-			SDL_Rect src;
-			src.x = 0;
-			src.y = 0;
-			src.w = gusMouseCursorWidth;
-			src.h = gusMouseCursorHeight;
-			SDL_Rect dst;
-			dst.x = MousePos.iX - gsMouseCursorXOffset;
-			dst.y = MousePos.iY - gsMouseCursorYOffset;
-
-			InvalidateRegion(dst.x, dst.y, dst.x + src.w, dst.y + src.h);
-
+			SDL_Surface* WindowSurface = SDL_GetWindowSurface(g_game_window);
 			for (UINT32 i = 0; i < guiDirtyRegionCount; i++)
 			{
 				SDL_BlitSurface(FrameBuffer, &DirtyRegions[i], WindowSurface, &DirtyRegions[i]);
 			}
-
-			SDL_BlitSurface(MouseCursor, &src, WindowSurface, &dst);
-			InvalidateRegion(MouseBackground.x, MouseBackground.y, MouseBackground.x + MouseBackground.w, MouseBackground.y + MouseBackground.h);
-			MouseBackground = dst;
 		}
 		if (scrolling)
 		{
@@ -680,15 +654,6 @@ void GetPrimaryRGBDistributionMasks(UINT32* const  RedBitMask, UINT32* const Gre
 	*RedBitMask   = gusRedMask;
 	*GreenBitMask = gusGreenMask;
 	*BlueBitMask  = gusBlueMask;
-}
-
-
-void SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHeight, UINT16 usCursorWidth)
-{
-	gsMouseCursorXOffset = sOffsetX;
-	gsMouseCursorYOffset = sOffsetY;
-	gusMouseCursorWidth  = usCursorWidth;
-	gusMouseCursorHeight = usCursorHeight;
 }
 
 
